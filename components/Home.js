@@ -1,8 +1,27 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LineCard from './LineCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const KEY_STORAGE_LINES = 'lines-state';
 
 const Home = () => {
   const [lines, setLines] = useState([{}, {}, {}, {}]);
+
+  useEffect(() => {
+    AsyncStorage.getItem(KEY_STORAGE_LINES).then((value) => {
+      if (value) {
+        setLines(JSON.parse(value));
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(
+      () => AsyncStorage.setItem(KEY_STORAGE_LINES, JSON.stringify(lines)),
+      200,
+    );
+    return () => clearTimeout(timeoutId);
+  }, [lines]);
 
   const handleChangeDistance = (index, value) => {
     setLines((prev) => {
