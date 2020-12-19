@@ -10,6 +10,7 @@ import {Icon} from 'react-native-elements';
 import {launchCamera} from 'react-native-image-picker';
 import {Card, Badge, Button, Image} from 'react-native-elements';
 import ModalSpeechToText from './ModalSpeechToText';
+import ModalClearAll from './ModalClearAll';
 
 const LineCard = ({
   number,
@@ -21,6 +22,7 @@ const LineCard = ({
   onChangeLandmark,
 }) => {
   const [modalVocalIsVisible, setModalVocalIsVisible] = useState(false);
+  const [modalClearAllIsVisible, setModalClearAllIsVisible] = useState(false);
 
   const handleAddLandmark = () => {
     launchCamera(
@@ -51,6 +53,15 @@ const LineCard = ({
         />
         <TouchableNativeFeedback onPress={() => setModalVocalIsVisible(true)}>
           <Icon name="text-to-speech" type="material-community" />
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback
+          onPress={() => setModalClearAllIsVisible(true)}>
+          <Icon
+            style={styles.clear}
+            name="clear"
+            color={'#f00'}
+            type="material"
+          />
         </TouchableNativeFeedback>
       </View>
       <View style={styles.secondLine}>
@@ -86,6 +97,18 @@ const LineCard = ({
           onValid={(text) => {
             onChangeDescription(text);
             setModalVocalIsVisible(false);
+          }}
+        />
+      )}
+      {modalClearAllIsVisible && (
+        <ModalClearAll
+          isVisible={modalClearAllIsVisible}
+          onClose={() => setModalClearAllIsVisible(false)}
+          onValid={() => {
+            onChangeDescription('');
+            onChangeDistance('');
+            onChangeLandmark('');
+            setModalClearAllIsVisible(false);
           }}
         />
       )}
@@ -130,6 +153,9 @@ const styles = StyleSheet.create({
   landmark: {
     width: 100,
     height: 100,
+  },
+  clear: {
+    marginLeft: 20,
   },
 });
 
