@@ -1,6 +1,14 @@
-import React from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableNativeFeedback,
+} from 'react-native';
+import {Icon} from 'react-native-elements';
 import {Card, Badge} from 'react-native-elements';
+import ModalSpeechToText from './ModalSpeechToText';
 
 const LineCard = ({
   number,
@@ -9,6 +17,8 @@ const LineCard = ({
   onChangeDistance,
   onChangeDescription,
 }) => {
+  const [modalVocalIsVisible, setModalVocalIsVisible] = useState(false);
+
   return (
     <Card style={styles.card}>
       <View style={styles.line}>
@@ -22,6 +32,9 @@ const LineCard = ({
           keyboardType="default"
           onChangeText={onChangeDescription}
         />
+        <TouchableNativeFeedback onPress={() => setModalVocalIsVisible(true)}>
+          <Icon name="text-to-speech" type="material-community" />
+        </TouchableNativeFeedback>
       </View>
       <View style={styles.line}>
         <TextInput
@@ -34,6 +47,17 @@ const LineCard = ({
         />
         <Text>{distance ? 'm' : ''}</Text>
       </View>
+
+      {modalVocalIsVisible && (
+        <ModalSpeechToText
+          isVisible={modalVocalIsVisible}
+          onClose={() => setModalVocalIsVisible(false)}
+          onValid={(text) => {
+            onChangeDescription(text);
+            setModalVocalIsVisible(false);
+          }}
+        />
+      )}
     </Card>
   );
 };
