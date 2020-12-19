@@ -1,7 +1,6 @@
 import React from 'react';
 import {Overlay, Button, Text} from 'react-native-elements';
 import {StyleSheet, View} from 'react-native';
-import Voice from '@react-native-community/voice';
 
 export default function ModalClearAll({isVisible, onClose, onValid}) {
   return (
@@ -12,13 +11,7 @@ export default function ModalClearAll({isVisible, onClose, onValid}) {
       <>
         <Text h4>Voulez-vous vraiment supprimer cette ligne ?</Text>
         <View style={styles.buttons}>
-          <Button
-            title={'Annuler'}
-            onPress={() => {
-              Voice.destroy();
-              onClose();
-            }}
-          />
+          <Button title={'Annuler'} onPress={onClose} />
           <Button title={'Valider'} onPress={onValid} />
         </View>
       </>

@@ -11,6 +11,7 @@ import {launchCamera} from 'react-native-image-picker';
 import {Card, Badge, Button, Image} from 'react-native-elements';
 import ModalSpeechToText from './ModalSpeechToText';
 import ModalClearAll from './ModalClearAll';
+import ModalImageFullScreen from './ModalImageFullScreen';
 
 const LineCard = ({
   number,
@@ -23,6 +24,7 @@ const LineCard = ({
 }) => {
   const [modalVocalIsVisible, setModalVocalIsVisible] = useState(false);
   const [modalClearAllIsVisible, setModalClearAllIsVisible] = useState(false);
+  const [modalImageFullScreen, setImageFullScreen] = useState(null);
 
   const handleAddLandmark = () => {
     launchCamera(
@@ -77,10 +79,12 @@ const LineCard = ({
           <Text>{distance ? 'm' : ''}</Text>
         </View>
         {landmark ? (
-          <Image
-            source={{uri: `data:image/gif;base64,${landmark}`}}
-            style={styles.landmark}
-          />
+          <TouchableNativeFeedback onPress={() => setImageFullScreen(true)}>
+            <Image
+              source={{uri: `data:image/gif;base64,${landmark}`}}
+              style={styles.landmark}
+            />
+          </TouchableNativeFeedback>
         ) : (
           <Button
             title={'Ajouter un repère'}
@@ -109,6 +113,17 @@ const LineCard = ({
             onChangeDistance('');
             onChangeLandmark('');
             setModalClearAllIsVisible(false);
+          }}
+        />
+      )}
+      {modalImageFullScreen && (
+        <ModalImageFullScreen
+          isVisible={modalImageFullScreen}
+          onClose={() => setImageFullScreen(false)}
+          landmark={landmark}
+          onClear={() => {
+            setImageFullScreen(false);
+            onChangeLandmark('');
           }}
         />
       )}
