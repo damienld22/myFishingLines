@@ -39,14 +39,24 @@ const Home = () => {
     });
   };
 
+  const handleChangeLandmark = (index, value) => {
+    setLines((prev) => {
+      const updated = [...prev];
+      updated[index].landmark = value;
+      return updated;
+    });
+  };
+
   return lines.map((elt, index) => (
     <LineCard
       key={index}
       number={index + 1}
       distance={elt.distance}
+      landmark={elt.landmark}
       description={elt.description}
       onChangeDescription={(value) => handleChangeDescription(index, value)}
       onChangeDistance={(value) => handleChangeDistance(index, value)}
+      onChangeLandmark={(value) => handleChangeLandmark(index, value)}
     />
   ));
 };
