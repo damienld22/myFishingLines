@@ -22,6 +22,8 @@ export default function ModalClearAll({isVisible, onClose, onValid}) {
 const styles = StyleSheet.create({
   container: {
     width: 300,
+    borderRadius: 20,
+    padding: 20,
   },
   buttons: {
     flexDirection: 'row',

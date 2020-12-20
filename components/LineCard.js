@@ -50,8 +50,30 @@ const LineCard = ({
 
   return (
     <Card style={styles.card}>
-      <View style={styles.line}>
+      <View style={styles.firstLine}>
         <Badge value={number} badgeStyle={styles.badge} />
+        <TouchableNativeFeedback
+          onPress={() => setModalClearAllIsVisible(true)}>
+          <Icon
+            style={styles.clear}
+            name="clear"
+            color={'#f00'}
+            type="material"
+          />
+        </TouchableNativeFeedback>
+      </View>
+      <View style={styles.line}>
+        <TextInput
+          value={distance || ''}
+          style={distance ? styles.distance : ''}
+          editable
+          placeholder="Distance"
+          keyboardType="numeric"
+          onChangeText={onChangeDistance}
+        />
+        <Text>{distance ? 'm' : ''}</Text>
+      </View>
+      <View style={styles.line}>
         <TextInput
           multiline
           value={description || ''}
@@ -64,28 +86,8 @@ const LineCard = ({
         <TouchableNativeFeedback onPress={() => setModalVocalIsVisible(true)}>
           <Icon name="text-to-speech" type="material-community" />
         </TouchableNativeFeedback>
-        <TouchableNativeFeedback
-          onPress={() => setModalClearAllIsVisible(true)}>
-          <Icon
-            style={styles.clear}
-            name="clear"
-            color={'#f00'}
-            type="material"
-          />
-        </TouchableNativeFeedback>
       </View>
-      <View style={styles.secondLine}>
-        <View style={styles.distanceContainer}>
-          <TextInput
-            value={distance || ''}
-            style={distance ? styles.distance : ''}
-            editable
-            placeholder="Distance"
-            keyboardType="numeric"
-            onChangeText={onChangeDistance}
-          />
-          <Text>{distance ? 'm' : ''}</Text>
-        </View>
+      <View style={styles.markerLine}>
         <View style={styles.addLandmarkContainer}>
           {landmarkOrientation ? (
             <TouchableNativeFeedback
@@ -189,24 +191,25 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'column',
   },
+  firstLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   line: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
   },
-  secondLine: {
+  markerLine: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 10,
   },
   text: {
     flex: 1,
-    marginLeft: 10,
-    textAlign: 'center',
   },
   distance: {
     width: 35,
@@ -214,10 +217,6 @@ const styles = StyleSheet.create({
   badge: {
     width: 25,
     height: 25,
-  },
-  distanceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   landmark: {
     width: 80,
