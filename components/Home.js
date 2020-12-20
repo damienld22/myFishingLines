@@ -47,16 +47,28 @@ const Home = () => {
     });
   };
 
+  const handleChangeLandmarkOrientation = (index, value) => {
+    setLines((prev) => {
+      const updated = [...prev];
+      updated[index].landmarkOrientation = value;
+      return updated;
+    });
+  };
+
   return lines.map((elt, index) => (
     <LineCard
       key={index}
       number={index + 1}
       distance={elt.distance}
       landmark={elt.landmark}
+      landmarkOrientation={elt.landmarkOrientation}
       description={elt.description}
       onChangeDescription={(value) => handleChangeDescription(index, value)}
       onChangeDistance={(value) => handleChangeDistance(index, value)}
       onChangeLandmark={(value) => handleChangeLandmark(index, value)}
+      onChangeLandmarkOrientation={(value) =>
+        handleChangeLandmarkOrientation(index, value)
+      }
     />
   ));
 };

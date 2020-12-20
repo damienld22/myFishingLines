@@ -39,33 +39,34 @@ export default function ModalImageFullScreen({
 
   return (
     <Overlay isVisible={isVisible} onBackdropPress={onClose} fullScreen={true}>
-      <View style={styles.buttons}>
-        <TouchableNativeFeedback onPress={onClose}>
-          <Icon name="arrow-back" type="material" />
-        </TouchableNativeFeedback>
-        <Button
-          titleStyle={styles.clearButton}
-          onPress={onClear}
-          title="Supprimer"
-          type="clear"
-          iconRight={<Icon name="clear" type="material" />}
-        />
-      </View>
-      <View style={styles.container}>
-        <Image
-          onLayout={onLayoutImage}
-          source={{uri: `data:image/gif;base64,${landmark.image}`}}
-          style={{width, height}}
-        />
-      </View>
-      <View
-        style={{
-          ...styles.landmark,
-          left: landmark.positionLandmark.X + positionPicture.X,
-          top: landmark.positionLandmark.Y + positionPicture.Y,
-        }}>
-        <Icon type="material" name="room" color="#FF0000" />
-      </View>
+      <>
+        <View style={styles.buttons}>
+          <TouchableNativeFeedback onPress={onClose}>
+            <Icon name="arrow-back" type="material" />
+          </TouchableNativeFeedback>
+          <Button
+            titleStyle={styles.clearButton}
+            onPress={onClear}
+            title="Supprimer"
+            type="clear"
+          />
+        </View>
+        <View style={styles.container}>
+          <Image
+            onLayout={onLayoutImage}
+            source={{uri: `data:image/gif;base64,${landmark.image}`}}
+            style={{width, height}}
+          />
+        </View>
+        <View
+          style={{
+            ...styles.landmark,
+            left: landmark.positionLandmark.X + positionPicture.X,
+            top: landmark.positionLandmark.Y + positionPicture.Y,
+          }}>
+          <Icon type="material" name="room" color="#FF0000" />
+        </View>
+      </>
     </Overlay>
   );
 }

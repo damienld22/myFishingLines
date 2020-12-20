@@ -6,25 +6,31 @@ import {
   TextInput,
   TouchableNativeFeedback,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
 import {launchCamera} from 'react-native-image-picker';
-import {Card, Badge, Button, Image} from 'react-native-elements';
+import {Card, Badge, Icon, Image, Button} from 'react-native-elements';
 import ModalSpeechToText from './ModalSpeechToText';
 import ModalClearAll from './ModalClearAll';
 import ModalImageFullScreen from './ModalImageFullScreen';
 import ModalImageAddLandmark from './ModalImageAddLandmark';
+import ModalAddLandmarkOrientation from './ModalAddLandmarkOrientation';
 
 const LineCard = ({
   number,
   description,
   distance,
   landmark,
+  landmarkOrientation,
   onChangeDistance,
   onChangeDescription,
   onChangeLandmark,
+  onChangeLandmarkOrientation,
 }) => {
   const [modalVocalIsVisible, setModalVocalIsVisible] = useState(false);
   const [modalClearAllIsVisible, setModalClearAllIsVisible] = useState(false);
+  const [
+    modalAddLandmarkOrientationIsVisible,
+    setModalAddLandmarkOrientationIsVisible,
+  ] = useState(false);
   const [modalImageFullScreen, setImageFullScreen] = useState(null);
   const [imageToEdit, setImageToEdit] = useState(null);
 
@@ -80,20 +86,45 @@ const LineCard = ({
           />
           <Text>{distance ? 'm' : ''}</Text>
         </View>
-        {landmark ? (
-          <TouchableNativeFeedback onPress={() => setImageFullScreen(true)}>
-            <Image
-              source={{uri: `data:image/gif;base64,${landmark.image}`}}
-              style={styles.landmark}
+        <View style={styles.addLandmarkContainer}>
+          {landmarkOrientation ? (
+            <TouchableNativeFeedback
+              onPress={() => setModalAddLandmarkOrientationIsVisible(true)}>
+              <View style={styles.landmarkOrientationDisplay}>
+                <Icon type="material" name="explore" size={15} />
+                <Text>{`${landmarkOrientation}°`}</Text>
+              </View>
+            </TouchableNativeFeedback>
+          ) : (
+            <Button
+              onPress={() => setModalAddLandmarkOrientationIsVisible(true)}
+              type="clear"
+              icon={{
+                name: 'add-location',
+                type: 'material',
+                size: 20,
+              }}
             />
-          </TouchableNativeFeedback>
-        ) : (
-          <Button
-            title={'Ajouter un repère'}
-            type="clear"
-            onPress={handleAddLandmark}
-          />
-        )}
+          )}
+          {landmark ? (
+            <TouchableNativeFeedback onPress={() => setImageFullScreen(true)}>
+              <Image
+                source={{uri: `data:image/gif;base64,${landmark.image}`}}
+                style={styles.landmark}
+              />
+            </TouchableNativeFeedback>
+          ) : (
+            <Button
+              onPress={handleAddLandmark}
+              type="clear"
+              icon={{
+                name: 'add-a-photo',
+                type: 'material',
+                size: 20,
+              }}
+            />
+          )}
+        </View>
       </View>
 
       {modalVocalIsVisible && (
@@ -140,6 +171,16 @@ const LineCard = ({
           image={imageToEdit}
         />
       )}
+      {modalAddLandmarkOrientationIsVisible && (
+        <ModalAddLandmarkOrientation
+          isVisible={modalAddLandmarkOrientationIsVisible}
+          onClose={() => setModalAddLandmarkOrientationIsVisible(null)}
+          onValid={(value) => {
+            onChangeLandmarkOrientation(value);
+            setModalAddLandmarkOrientationIsVisible(false);
+          }}
+        />
+      )}
     </Card>
   );
 };
@@ -179,10 +220,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   landmark: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    marginLeft: 10,
   },
   clear: {
+    marginLeft: 20,
+  },
+  addLandmarkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  landmarkOrientationDisplay: {
+    marginRight: 20,
     marginLeft: 20,
   },
 });

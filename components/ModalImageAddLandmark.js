@@ -46,43 +46,47 @@ export default function ModalImageAddLandmark({
 
   return (
     <Overlay isVisible={isVisible} onBackdropPress={onClose} fullScreen={true}>
-      <Text h4>Ajouter un repère :</Text>
-      <Text style={styles.instruction}>
-        Ajoutez un repère en cliquant sur l'image
-      </Text>
-      <View style={styles.container}>
-        <TouchableNativeFeedback onPress={handleClick} onLayout={onLayoutImage}>
-          <Image
-            source={{uri: `data:image/gif;base64,${image}`}}
-            style={{width, height}}
-          />
-        </TouchableNativeFeedback>
-      </View>
+      <>
+        <Text h4>Ajouter un repère :</Text>
+        <Text style={styles.instruction}>
+          Ajoutez un repère en cliquant sur l'image
+        </Text>
+        <View style={styles.container}>
+          <TouchableNativeFeedback
+            onPress={handleClick}
+            onLayout={onLayoutImage}>
+            <Image
+              source={{uri: `data:image/gif;base64,${image}`}}
+              style={{width, height}}
+            />
+          </TouchableNativeFeedback>
+        </View>
 
-      <View style={styles.buttons}>
-        <Button onPress={onClose} title="Annuler" type="clear" />
-        <Button
-          onPress={() => {
-            onValid({
-              image,
-              positionLandmark: {
-                X: positionLandmark.X - positionPicture.X,
-                Y: positionLandmark.Y - positionPicture.Y,
-              },
-            });
-          }}
-          title="Valider"
-          type="clear"
-        />
-      </View>
-      <View
-        style={{
-          ...styles.landmark,
-          left: positionLandmark.X,
-          top: positionLandmark.Y,
-        }}>
-        <Icon type="material" name="room" color="#FF0000" />
-      </View>
+        <View style={styles.buttons}>
+          <Button onPress={onClose} title="Annuler" type="clear" />
+          <Button
+            onPress={() => {
+              onValid({
+                image,
+                positionLandmark: {
+                  X: positionLandmark.X - positionPicture.X,
+                  Y: positionLandmark.Y - positionPicture.Y,
+                },
+              });
+            }}
+            title="Valider"
+            type="clear"
+          />
+        </View>
+        <View
+          style={{
+            ...styles.landmark,
+            left: positionLandmark.X,
+            top: positionLandmark.Y,
+          }}>
+          <Icon type="material" name="room" color="#FF0000" />
+        </View>
+      </>
     </Overlay>
   );
 }
