@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Overlay, Image, Icon} from 'react-native-elements';
+import {Overlay, Image, Icon, Button} from 'react-native-elements';
 import {
   StyleSheet,
   Image as ImageRN,
@@ -36,9 +36,13 @@ export default function ModalImageFullScreen({
         <TouchableNativeFeedback onPress={onClose}>
           <Icon name="arrow-back" type="material" />
         </TouchableNativeFeedback>
-        <TouchableNativeFeedback onPress={onClear}>
-          <Icon name="clear" type="material" />
-        </TouchableNativeFeedback>
+        <Button
+          titleStyle={styles.clearButton}
+          onPress={onClear}
+          title="Supprimer"
+          type="clear"
+          iconRight={<Icon name="clear" type="material" />}
+        />
       </View>
       <View style={styles.container}>
         <Image
@@ -60,5 +64,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  clearButton: {
+    color: '#FF0000',
   },
 });
