@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Overlay, Image, Icon, Button} from 'react-native-elements';
+import {Overlay, Image, Text, Button, Icon} from 'react-native-elements';
 import {
   StyleSheet,
   Image as ImageRN,
@@ -8,14 +8,15 @@ import {
   TouchableNativeFeedback,
 } from 'react-native';
 
-export default function ModalImageFullScreen({
+export default function ModalImageAddLandmark({
   isVisible,
   onClose,
-  onClear,
-  landmark,
+  onValid,
+  image,
 }) {
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
+  const [positionLandmark, setPositionLandmark] = useState({X: -50, Y: -50});
   const [positionPicture, setPositionPicture] = useState({X: 0, Y: 0});
 
   const onLayoutImage = (evt) => {
@@ -24,9 +25,15 @@ export default function ModalImageFullScreen({
     });
   };
 
+  const handleClick = (evt) => {
+    const X = evt.nativeEvent.pageX - 20; // Remove 20px to integrate size of element
+    const Y = evt.nativeEvent.pageY - 20; // Remove 20px to integrate size of element
+    setPositionLandmark({X, Y});
+  };
+
   useEffect(() => {
     ImageRN.getSize(
-      `data:image/gif;base64,${landmark.image}`,
+      `data:image/gif;base64,${image}`,
       (widthImage, heightImage) => {
         const screenWidth = Dimensions.get('window').width;
         const scaleFactor = widthImage / screenWidth;
@@ -35,34 +42,44 @@ export default function ModalImageFullScreen({
         setHeight(imageHeight);
       },
     );
-  }, [landmark]);
+  }, [image]);
 
   return (
     <Overlay isVisible={isVisible} onBackdropPress={onClose} fullScreen={true}>
-      <View style={styles.buttons}>
-        <TouchableNativeFeedback onPress={onClose}>
-          <Icon name="arrow-back" type="material" />
-        </TouchableNativeFeedback>
-        <Button
-          titleStyle={styles.clearButton}
-          onPress={onClear}
-          title="Supprimer"
-          type="clear"
-          iconRight={<Icon name="clear" type="material" />}
-        />
-      </View>
+      <Text h4>Ajouter un repère :</Text>
+      <Text style={styles.instruction}>
+        Ajoutez un repère en cliquant sur l'image
+      </Text>
       <View style={styles.container}>
-        <Image
-          onLayout={onLayoutImage}
-          source={{uri: `data:image/gif;base64,${landmark.image}`}}
-          style={{width, height}}
+        <TouchableNativeFeedback onPress={handleClick} onLayout={onLayoutImage}>
+          <Image
+            source={{uri: `data:image/gif;base64,${image}`}}
+            style={{width, height}}
+          />
+        </TouchableNativeFeedback>
+      </View>
+
+      <View style={styles.buttons}>
+        <Button onPress={onClose} title="Annuler" type="clear" />
+        <Button
+          onPress={() => {
+            onValid({
+              image,
+              positionLandmark: {
+                X: positionLandmark.X - positionPicture.X,
+                Y: positionLandmark.Y - positionPicture.Y,
+              },
+            });
+          }}
+          title="Valider"
+          type="clear"
         />
       </View>
       <View
         style={{
           ...styles.landmark,
-          left: landmark.positionLandmark.X + positionPicture.X,
-          top: landmark.positionLandmark.Y + positionPicture.Y,
+          left: positionLandmark.X,
+          top: positionLandmark.Y,
         }}>
         <Icon type="material" name="room" color="#FF0000" />
       </View>
@@ -76,13 +93,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  instruction: {
+    fontStyle: 'italic',
+  },
   buttons: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  clearButton: {
-    color: '#FF0000',
+    bottom: 0,
+    marginTop: 'auto',
   },
   landmark: {
     zIndex: 9999,

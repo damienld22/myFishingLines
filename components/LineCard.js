@@ -12,6 +12,7 @@ import {Card, Badge, Button, Image} from 'react-native-elements';
 import ModalSpeechToText from './ModalSpeechToText';
 import ModalClearAll from './ModalClearAll';
 import ModalImageFullScreen from './ModalImageFullScreen';
+import ModalImageAddLandmark from './ModalImageAddLandmark';
 
 const LineCard = ({
   number,
@@ -25,6 +26,7 @@ const LineCard = ({
   const [modalVocalIsVisible, setModalVocalIsVisible] = useState(false);
   const [modalClearAllIsVisible, setModalClearAllIsVisible] = useState(false);
   const [modalImageFullScreen, setImageFullScreen] = useState(null);
+  const [imageToEdit, setImageToEdit] = useState(null);
 
   const handleAddLandmark = () => {
     launchCamera(
@@ -35,7 +37,7 @@ const LineCard = ({
         quality: 0.5,
       },
       (picture) => {
-        onChangeLandmark(picture.base64);
+        setImageToEdit(picture.base64);
       },
     );
   };
@@ -81,7 +83,7 @@ const LineCard = ({
         {landmark ? (
           <TouchableNativeFeedback onPress={() => setImageFullScreen(true)}>
             <Image
-              source={{uri: `data:image/gif;base64,${landmark}`}}
+              source={{uri: `data:image/gif;base64,${landmark.image}`}}
               style={styles.landmark}
             />
           </TouchableNativeFeedback>
@@ -125,6 +127,17 @@ const LineCard = ({
             setImageFullScreen(false);
             onChangeLandmark('');
           }}
+        />
+      )}
+      {imageToEdit && (
+        <ModalImageAddLandmark
+          isVisible={Boolean(imageToEdit)}
+          onClose={() => setImageToEdit(null)}
+          onValid={(res) => {
+            onChangeLandmark(res);
+            setImageToEdit(null);
+          }}
+          image={imageToEdit}
         />
       )}
     </Card>
